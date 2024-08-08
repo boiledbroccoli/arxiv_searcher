@@ -2,4 +2,5 @@ streamlit
 openai
 pandas
 numpy
-langchain
+st-annotated-text
+streamlit-aggrid
