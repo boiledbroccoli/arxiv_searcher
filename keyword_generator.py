@@ -1,7 +1,7 @@
 import os,openai,json,pandas as pd
 from langchain_core.prompts import PromptTemplate
 
-def keyword_generator(research_question, GPT_API_KEY, model_type="gpt-4",temperature):
+def keyword_generator(research_question, GPT_API_KEY,temperature = 0, model_type="gpt-4"):
     # 该函数会在 page 里被召唤
     os.environ["OPENAI_API_KEY"] =  GPT_API_KEY
 

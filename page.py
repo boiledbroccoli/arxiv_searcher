@@ -37,7 +37,8 @@ role = form.radio(
         key="role",
         options=["本科生", "研究生", "研究人员"],
     )
-
+form.markdown('----')
+form.markdown('### 学习风格')
 
 form.markdown('----')
 form.markdown('**🤖CHATGPT**')
