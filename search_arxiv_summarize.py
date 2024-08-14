@@ -1,6 +1,6 @@
 import pandas as pd, os
 
-def search_summarize(keyword,focus,expected_language,GPT_API_KEY):
+def search_summarize(keyword,focus,expected_language,GPT_API_KEY,category = ''):
     # 该函数会在 page 里被召唤
     os.environ["OPENAI_API_KEY"] =  GPT_API_KEY
 

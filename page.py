@@ -1,6 +1,6 @@
 
 # ref: https://segmentfault.com/a/1190000044102023
-import os, pandas as pd, numpy as np
+import os, pandas as pd, numpy as np, json
 # import plotly.express as px
 import streamlit as st
 from search_arxiv_summarize import search_summarize
@@ -8,7 +8,7 @@ from keyword_generator import keyword_generator
 from annotated_text import annotated_text
 from st_aggrid import AgGrid, GridOptionsBuilder, GridUpdateMode, DataReturnMode
 from summarize_all import summarize_all
-
+from learning_style_calculator import learning_style_calculator
 
 
 # document-loading
@@ -39,6 +39,19 @@ role = form.radio(
     )
 form.markdown('----')
 form.markdown('### 学习风格')
+
+questionaire = {}
+with open('learning_style_scale.json','r') as f:
+    ls_ques = json.load(f)
+
+for key in ls_ques:
+    questionaire[key] = form.radio(
+        ls_ques[key]['question'],
+        ['a','b'],
+        captions= ls_ques[key]['choices'],
+        index =None
+    )
+category = learning_style_calculator(questionaire)
 
 form.markdown('----')
 form.markdown('**🤖CHATGPT**')
@@ -92,7 +105,7 @@ with tab1:
         focus= st.selectbox("你的关注重点: ",("亮点","理论", "方法", "分析","结论"),) # 关注重点 ：需要改
         expected_language = st.text_input("总结时期望的语言？",placeholder="中文")
     if keyword != "" and kw_submit:
-        search_results = search_summarize(keyword,focus,expected_language,GPT_API_KEY,)
+        search_results = search_summarize(keyword,focus,expected_language,GPT_API_KEY)
         
         search_papers = AgGrid(search_results, 
                                use_checkbox = True) # 搜索的文献结果 ：需要改
