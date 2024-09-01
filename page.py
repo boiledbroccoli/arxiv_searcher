@@ -145,7 +145,7 @@ with tab1:
         key='dataGrid'
     )
 
-    if st.button("确认选中"):
+    if st.button("确认选中并总结"):
         selected_rows = pd.DataFrame(grid_response['selected_rows'])
         st.session_state.history_papers = pd.concat([st.session_state.history_papers,selected_rows[columns_show]])
         print(st.session_state.history_papers)
@@ -158,13 +158,18 @@ with tab1:
 
     # 调试输出当前选中的行数据
         st.write("当前选中的行数据:", selected_rows)
+        container_t1 = st.container(border=True)
+
 
 with tab2:
     st.write(st.session_state.history_papers)
+    summary = ''
     summarise_history = st.button("总结以上文献", key = 'summarise_history')
     if summarise_history:
         summary = summarize_all(st.session_state.history_papers,language,role,major,research_question,keyword,GPT_API_KEY,category = '')
-    
+    container = st.container(border=True)
+    container.write("## 文献总结")
+    container.write(summary)
 
     
     
