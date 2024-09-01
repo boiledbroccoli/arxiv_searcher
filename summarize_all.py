@@ -9,6 +9,7 @@ def get_focus_def(focus) -> list:
         '结论': '   - 研究所得到的最终结果或发现，总结了研究的意义和影响。'
     }
     focus_def = ''
+    print(focus)
     for f in focus:
         focus_def += dict_def[f]
     return focus_def
@@ -18,6 +19,7 @@ def get_focus_def(focus) -> list:
 
 def summarize_all(papers4summarise,language,role,major,question,focus,GPT_API_KEY,category = ''):
     # 该函数会在 page 里被召唤
+    papers4summarise = papers4summarise[['Title','Abstract']]
     os.environ["OPENAI_API_KEY"] =  GPT_API_KEY
     
     focus_def = get_focus_def(focus)
