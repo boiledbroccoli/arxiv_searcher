@@ -83,7 +83,7 @@ with st.expander("**💡关键词搜索建议**",expanded =True):
     with col1:
         research_question = st.text_input("你的研究问题：",placeholder="请输入你的研究问题", value="",label_visibility='collapsed')
     with col2:
-        rq_submit = st.button("🔍",key = 'rq')
+        rq_submit = st.button("🔼",key = 'rq')
     if research_question == '' and rq_submit:
         st.markdown("❓请输入你的研究问题")
     elif research_question != '' and rq_submit:

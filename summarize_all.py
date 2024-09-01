@@ -1,9 +1,10 @@
 import os,openai
 from langchain import PromptTemplate
-def summarize_all(papers4summarise,language,role,major,question,keyword,GPT_API_KEY,category = ''):
+def summarize_all(papers4summarise,language,role,major,question,keyword,focus,GPT_API_KEY,category = ''):
     # 该函数会在 page 里被召唤
     os.environ["OPENAI_API_KEY"] =  GPT_API_KEY
     
+    focus = '、'.join(focus)
     with open('prompt_summarize_all.txt','r') as f:
         prompt_summarise_all   = f.read()
     prompt_summarise_all = PromptTemplate.from_template(prompt_summarise_all)
@@ -28,6 +29,7 @@ def summarize_all(papers4summarise,language,role,major,question,keyword,GPT_API_
         keyword = keyword,
         role = role,
         major = major,
+        focus  = focus,
         question = question,
         category = category,
         language = language,

@@ -3,7 +3,7 @@ import os,openai,json,pandas as pd
 def prompt_kw_generation(research_question, major, language):
 
     prompt_kw = f"""
-    You are a specialized academic professor in {major}.
+    You are a specialized academic assistant.
 
     The user focuses on the research question: {research_question}. Your task is to identify highly relevant and specific keywords in English, based on the provided research question. The explanations for these keywords should be provided in the language specified by the input variable {language} and should be sufficiently detailed to guide effective academic research. Follow these steps to ensure comprehensive coverage:
 
