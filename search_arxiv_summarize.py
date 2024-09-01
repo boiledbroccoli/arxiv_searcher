@@ -18,8 +18,7 @@ translations = {
     "理论框架": "Theoretical Framework",
     "方法": "Methods",
     "分析": "Analysis",
-    "结果": "Results",
-    "结论": "Conclusions"
+    "结论": "Results",
 }
 
 def translate(inputs):
@@ -35,22 +34,33 @@ def generate_summary(abstract, major, role, language, category, focus):
     prompt += f'Your explanations should be suited to a {category.lower()} cognitive style and the understanding level of a {role.lower()}, and should be presented in {language}.\n\n'''
 
     focus_dict = {
-        'Highlights': "Highlights: Identify and discuss the key points and innovative aspects of the research relevant to the focus areas.",
-        'Theoretical Framework': "Theoretical Framework: Outline the theoretical underpinnings and hypotheses of the study, providing explanations suited to the reader's subject and grade level.",
-        'Methods': "Methods: Describe the research design and experimental methods used in the study. Focus on the approach and rationale for the chosen methods, ensuring clarity and relevance to the specified focus areas.",
-        'Analysis': "Analysis: Detail the data analysis techniques employed in the research. Emphasize how these methods contribute to the findings, tailored to the user's understanding and interests.",
-        'Results': "Results/Conclusions: Summarize the main outcomes and conclusions of the study, highlighting how they address the research questions and impact the focus areas."
+        'Highlights': "Identify and discuss the key points and innovative aspects of the research relevant to the focus areas.",
+        'Theoretical Framework': "Outline the theoretical underpinnings and hypotheses of the study, providing explanations suited to the reader's subject and grade level.",
+        'Methods': "Describe the research design and experimental methods used in the study. Focus on the approach and rationale for the chosen methods, ensuring clarity and relevance to the specified focus areas.",
+        'Analysis': "Detail the data analysis techniques employed in the research. Emphasize how these methods contribute to the findings, tailored to the user's understanding and interests.",
+        'Results': "Summarize the main outcomes and conclusions of the study, highlighting how they address the research questions and impact the focus areas."
     }
 
     for area in focus:
         if area in focus_dict:
             prompt += f"{focus_dict[area]}\n"
     
-    prompt += '''Your analysis will be structured into the following sections, each corresponding to a focus area. This structured output will be formatted in a simplified JSON format to facilitate easy extraction and use of the information. Example JSON output is as follows:
+    prompt += '''The analysis must strictly use the following section names only: Highlights, Theoretical Framework, Methods, Analysis, Results. 
+    Do not use any other section names or variations.
 
-{"Highlights": "Identify and discuss the key points and innovative aspects of the research relevant to the focus areas."},
-{"Methods": "Describe the research design and experimental methods used, focusing on the approach and rationale."}
-'''
+    Your analysis will be structured into the following sections, each corresponding to a focus area you specified. The output will be formatted in a simplified JSON style with section headers in English and content in the specified language. Below is an example of the format. The section names must match exactly as specified:
+
+    Example Format:
+    {
+        "Highlights": "Your detailed explanation for the Highlights section tailored to the specified cognitive style and understanding level.",
+        "Theoretical Framework": "Your detailed explanation for the Theoretical Framework section.",
+        "Methods": "Your detailed explanation for the Methods section.",
+        "Analysis": "Your detailed explanation for the Analysis section.",
+        "Results": "Your detailed explanation for the Results section."
+    }
+    
+    Note: The sections generated will align with the focus areas you have specified (e.g., Highlights, Theoretical Framework, Methods, Analysis, Results). This example shows the format only; the content should be generated accordingly, without changing section names.'''
+
     return prompt
 
 # def clean_text(text):
@@ -86,14 +96,15 @@ def search_summarize(keyword,major,role,language,focus,category,GPT_API_KEY):
     for result in results:
         client = openai.OpenAI()
         clean_summary = result.summary.replace('\n', ' ')
+        print(clean_summary)
         # def generate_summary(abstract, major, role, language, category, focus):
         prompt_summary = generate_summary(result.summary,major,role,language,category,translated_focus)
-        response = client.chat.completions.create(model='gpt-4',
+        response = client.chat.completions.create(model='gpt-4o',
                                               messages=[
                                                   {"role": "user", "content": prompt_summary}]) # notice
 
         analysis = response.choices[0].message.content
-
+        print(analysis)
         analysis_dict = {
             "Highlights": extract_section(analysis, "Highlights"),
             "Theoretical Framework": extract_section(analysis, "Theoretical Framework"),
@@ -103,6 +114,8 @@ def search_summarize(keyword,major,role,language,focus,category,GPT_API_KEY):
         }
 
         filtered_analysis_dict = {key: value for key, value in analysis_dict.items() if key in translated_focus}
+        print("filtered_analysis_dict",filtered_analysis_dict)
+        print("translated_focus",translated_focus)
 
         data.append({
             "Title": result.title,
