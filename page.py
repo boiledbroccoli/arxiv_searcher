@@ -12,12 +12,6 @@ from learning_style_calculator import learning_style_calculator
 
 
 
-# if 'clicked' not in st.session_state:
-#     st.session_state.clicked = False
-
-# def search_keyword_click():
-#     st.session_state.clicked = True
-#     print(st.session_state.clicked)
     
 # title
 st.set_page_config(page_title="智能学术助手", page_icon="📕", layout="wide")
@@ -306,41 +300,9 @@ with tab1:
 
 
 with tab2:
-    # builder1 = GridOptionsBuilder.from_dataframe(st.session_state.history_papers)
-    # grid_options1 = builder1.build()
-    # builder1.configure_column(
-    # 'Abstract',
-    # wrapText=True,        # Enable text wrapping inside the cells
-    # autoHeight=True,      # Allow row height to adjust based on content
-    # width=800             # Set specific width for the 'abstract' column
-    # )
-
-    # builder1.configure_column(
-    #     'Title',
-    #     wrapText=True,        
-    #     autoHeight=True,      
-    #     width=400             # Set specific width for the 'title' column
-    # )
-
-    # builder1.configure_column(
-    #     'Date',
-    #     wrapText=True,        
-    #     autoHeight=True,      
-    #     width=100             # Set specific width for the 'date' column
-    # )
-
-    # for col in st.session_state.history_papers.columns:
-    #     if col not in ['Abstract', 'Title', 'Date']:
-    #         builder1.configure_column(
-    #             col,
-    #             wrapText=True,    # Enable text wrapping for other columns
-    #             autoHeight=True,  # Allow auto height adjustment based on content
-    #             width=400         # Set a general width of 400 for unspecified columns
-    #         )
-    # print(st.session_state.history_papers)
+    
     history_papers = AgGrid(
         st.session_state.history_papers,
-        # gridOptions=grid_options,
         update_mode=GridUpdateMode.MODEL_CHANGED
     )
 
