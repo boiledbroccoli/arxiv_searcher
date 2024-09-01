@@ -27,7 +27,7 @@ def summarize_all(papers4summarise,language,role,major,question,focus,GPT_API_KE
         focus = focus[0]
     with open('prompt_summarize_all.txt','r') as f:
         prompt_summarise_all   = f.read()
-    prompt_summarise_all = PromptTemplate.from_template(prompt_summarise_all)
+    # prompt_summarise_all = PromptTemplate.from_template(prompt_summarise_all)
     if category == '':
         point4 = ''
     else:
