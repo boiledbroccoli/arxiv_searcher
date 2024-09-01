@@ -48,6 +48,10 @@ def summarize_all(papers4summarise,language,role,major,question,focus,GPT_API_KE
             "   - 感受型学习者能够发觉到学习与真实情境的关联性，这会让他们对于资讯的理解与记忆有较佳的成效。"
         point4 = f'4. 根据{category}，使用适合该风格的语言和形式呈现总结。{category}的具体表现形式为:\n{category_format}'
     
+    # if category != '':
+    #     link = '，以及'
+    # else:
+    #     link = ''
     prompt_summarise_all = prompt_summarise_all.format(
         role = role,
         major = major,
