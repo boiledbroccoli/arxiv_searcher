@@ -4,3 +4,4 @@ pandas
 numpy
 st-annotated-text
 streamlit-aggrid
+arxiv
