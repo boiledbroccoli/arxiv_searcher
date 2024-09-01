@@ -1,5 +1,5 @@
 import os,openai
-from langchain import PromptTemplate
+# from langchain import PromptTemplate
 def get_focus_def(focus) -> list:
     dict_def = {
         '理论': '   - 理论：研究中用于解释现象或指导研究的基本概念和原理。',
@@ -52,20 +52,21 @@ def summarize_all(papers4summarise,language,role,major,question,focus,GPT_API_KE
     #     link = '，以及'
     # else:
     #     link = ''
-    prompt_summarise_all = prompt_summarise_all.format(
-        role = role,
-        major = major,
-        focus  = focus,
-        focus_def = focus_def,
-        question = question,
-        category = category,
-        language = language,
-        papers4summarise = papers4summarise,
-        point4 = point4
-    )
+    # prompt_summarise_all = prompt_summarise_all.format(
+    #     role = role,
+    #     major = major,
+    #     focus  = focus,
+    #     focus_def = focus_def,
+    #     question = question,
+    #     category = category,
+    #     language = language,
+    #     papers4summarise = papers4summarise,
+    #     point4 = point4
+    # )
+    prompt_summarise_all = eval('f' + repr(prompt_summarise_all))
     print(prompt_summarise_all)
     client = openai.OpenAI()
-    response = client.chat.completions.create(model='gpt-4',
+    response = client.chat.completions.create(model='gpt-4o',
                                               messages=[
                                                   {"role": "user", "content": prompt_summarise_all}]) # notice
 
