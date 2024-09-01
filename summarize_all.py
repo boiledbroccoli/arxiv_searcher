@@ -1,5 +1,5 @@
 import os,openai
-# from langchain import PromptTemplate
+
 def get_focus_def(focus) -> list:
     dict_def = {
         '理论': '   - 理论：研究中用于解释现象或指导研究的基本概念和原理。',
@@ -27,7 +27,7 @@ def summarize_all(papers4summarise,language,role,major,question,focus,GPT_API_KE
         focus = focus[0]
     with open('prompt_summarize_all.txt','r') as f:
         prompt_summarise_all   = f.read()
-    # prompt_summarise_all = PromptTemplate.from_template(prompt_summarise_all)
+    
     if category == '':
         point4 = ''
     else:
@@ -48,21 +48,6 @@ def summarize_all(papers4summarise,language,role,major,question,focus,GPT_API_KE
             "   - 感受型学习者能够发觉到学习与真实情境的关联性，这会让他们对于资讯的理解与记忆有较佳的成效。"
         point4 = f'4. 根据{category}，使用适合该风格的语言和形式呈现总结。{category}的具体表现形式为:\n{category_format}'
     
-    # if category != '':
-    #     link = '，以及'
-    # else:
-    #     link = ''
-    # prompt_summarise_all = prompt_summarise_all.format(
-    #     role = role,
-    #     major = major,
-    #     focus  = focus,
-    #     focus_def = focus_def,
-    #     question = question,
-    #     category = category,
-    #     language = language,
-    #     papers4summarise = papers4summarise,
-    #     point4 = point4
-    # )
     prompt_summarise_all = eval('f' + repr(prompt_summarise_all))
     print(prompt_summarise_all)
     client = openai.OpenAI()
