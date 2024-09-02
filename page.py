@@ -278,6 +278,7 @@ with tab1:
         # domLayout='autoHeight',
         key='dataGrid'
     )
+    # print(f"!!!!!!!!!!!!!!1\n{st.session_state.df_data}")
 
     if st.button("确认选中并总结"):
         selected_rows = pd.DataFrame(grid_response['selected_rows'])
