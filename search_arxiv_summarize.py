@@ -16,7 +16,6 @@ translations = {
         "理论": "Theory",
         "方法": "Methods",
         "分析": "Analysis",
-        "结果": "Results",
         "结论": "Conclusions"
     }
 
@@ -35,7 +34,6 @@ def translate(inputs):
         "理论": "Theory",
         "方法": "Methods",
         "分析": "Analysis",
-        "结果": "Results",
         "结论": "Conclusions"
     }
     return [translations.get(item, item) for item in inputs]
@@ -54,14 +52,14 @@ def generate_summary(abstract, major, role, language, category, focus):
         'Theory': "Outline the theoretical underpinnings and hypotheses of the study, providing explanations suited to the reader's subject and grade level.",
         'Methods': "Describe the research design and experimental methods used in the study. Focus on the approach and rationale for the chosen methods, ensuring clarity and relevance to the specified focus areas.",
         'Analysis': "Detail the data analysis techniques employed in the research. Emphasize how these methods contribute to the findings, tailored to the user's understanding and interests.",
-        'Results': "Summarize the main outcomes and conclusions of the study, highlighting how they address the research questions and impact the focus areas."
+        'Conclusions': "Summarize the main outcomes and conclusions of the study, highlighting how they address the research questions and impact the focus areas."
     }
 
     for area in focus:
         if area in focus_dict:
             prompt += f"{focus_dict[area]}\n"
     
-    prompt += '''The analysis must strictly use the following section names only: Highlights, Theory, Methods, Analysis, Results. 
+    prompt += '''The analysis must strictly use the following section names only: Highlights, Theory, Methods, Analysis, Conclusions. 
     Do not use any other section names or variations.
 
     Your analysis will be structured into the following sections, each corresponding to a focus area you specified. The output will be formatted in a simplified JSON style with section headers in English and content in the specified language. Below is an example of the format. The section names must match exactly as specified:
@@ -72,10 +70,10 @@ def generate_summary(abstract, major, role, language, category, focus):
         "Theory": "Your detailed explanation for the Theory section.",
         "Methods": "Your detailed explanation for the Methods section.",
         "Analysis": "Your detailed explanation for the Analysis section.",
-        "Results": "Your detailed explanation for the Results section."
+        "Conclusions": "Your detailed explanation for the Conclusions section."
     }
     
-    Note: The sections generated will align with the focus areas you have specified (e.g., Highlights, Theory, Methods, Analysis, Results). This example shows the format only; the content should be generated accordingly, without changing section names.'''
+    Note: The sections generated will align with the focus areas you have specified (e.g., Highlights, Theory, Methods, Analysis, Conclusions). This example shows the format only; the content should be generated accordingly, without changing section names.'''
 
     return prompt
 
@@ -100,7 +98,7 @@ def search_summarize(keyword,major,role,language,focus,category,GPT_API_KEY):
     search = arxiv.Search(
     query = keyword,
     max_results = 3,
-    sort_by = arxiv.SortCriterion.SubmittedDate
+    sort_by = arxiv.SortCriterion.Relevance
     )
 
     results = client.results(search)
@@ -126,7 +124,7 @@ def search_summarize(keyword,major,role,language,focus,category,GPT_API_KEY):
             "Theory": extract_section(analysis, "Theory"),
             "Methods": extract_section(analysis, "Methods"),
             "Analysis": extract_section(analysis, "Analysis"),
-            "Results": extract_section(analysis, "Results")
+            "Conclusions": extract_section(analysis, "Conclusions")
         }
 
         filtered_analysis_dict = {key: value for key, value in analysis_dict.items() if key in translated_focus}
