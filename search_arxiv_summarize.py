@@ -1,8 +1,6 @@
 import pandas as pd, os
-import arxiv
-import streamlit as st
-import re
-import openai
+import arxiv, re,time,openai
+import streamlit as st 
 
 translations = {
         "心理学": "Psychology",
@@ -90,53 +88,65 @@ def extract_section(text, section_name):
     return match.group(1) if match else ""
 
 
-def search_summarize(keyword,major,role,language,focus,category,GPT_API_KEY):
-    # 该函数会在 page 里被召唤
-    os.environ["OPENAI_API_KEY"] =  GPT_API_KEY
+def search_summarize(keyword, major, role, language, focus, category, GPT_API_KEY):
+    
+    os.environ["OPENAI_API_KEY"] = GPT_API_KEY
 
-    client = arxiv.Client()
-    search = arxiv.Search(
-    query = keyword,
-    max_results = 10,
-    sort_by = arxiv.SortCriterion.Relevance
-    )
+    with st.status("开始收集数据", expanded=True) as status:
+        st.write("数据收集...")
 
-    results = client.results(search)
+        client = arxiv.Client()
+        search = arxiv.Search(
+            query=keyword,
+            max_results=3,
+            sort_by=arxiv.SortCriterion.SubmittedDate
+        )
 
-    translated_focus = translate(focus)
+        results = client.results(search)
 
-    data = []
+        status.update(label="生成总结...")
+        st.write("生成总结...")
 
-    for result in results:
-        client = openai.OpenAI()
-        clean_summary = result.summary.replace('\n', ' ')
-        print(clean_summary)
-        # def generate_summary(abstract, major, role, language, category, focus):
-        prompt_summary = generate_summary(result.summary,major,role,language,category,translated_focus)
-        response = client.chat.completions.create(model='gpt-4o',
-                                              messages=[
-                                                  {"role": "user", "content": prompt_summary}]) # notice
+        translated_focus = translate(focus)
+        data = []
 
-        analysis = response.choices[0].message.content
-        print(analysis)
-        analysis_dict = {
-            "Highlights": extract_section(analysis, "Highlights"),
-            "Theory": extract_section(analysis, "Theory"),
-            "Methods": extract_section(analysis, "Methods"),
-            "Analysis": extract_section(analysis, "Analysis"),
-            "Conclusions": extract_section(analysis, "Conclusions")
-        }
+        for result in results:
+            client = openai.OpenAI()
+            clean_summary = result.summary.replace('\n', ' ')
+            prompt_summary = generate_summary(result.summary, major, role, language, category, translated_focus)
 
-        filtered_analysis_dict = {key: value for key, value in analysis_dict.items() if key in translated_focus}
-        print("filtered_analysis_dict",filtered_analysis_dict)
-        print("translated_focus",translated_focus)
+            response = client.chat.completions.create(
+                model='gpt-4o',
+                messages=[
+                    {"role": "user", "content": prompt_summary}
+                ]
+            )
 
-        data.append({
-            "Title": result.title,
-            "Abstract": clean_summary,
-            "Date": result.published.strftime('%Y-%m-%d'),
-            **filtered_analysis_dict
-        })
+            analysis = response.choices[0].message.content
+            analysis_dict = {
+                "Highlights": extract_section(analysis, "Highlights"),
+                "Theoretical Framework": extract_section(analysis, "Theoretical Framework"),
+                "Methods": extract_section(analysis, "Methods"),
+                "Analysis": extract_section(analysis, "Analysis"),
+                "Results": extract_section(analysis, "Results")
+            }
 
-    df = pd.DataFrame(data)
+            filtered_analysis_dict = {key: value for key, value in analysis_dict.items() if key in translated_focus}
+
+            data.append({
+                "Title": result.title,
+                "Abstract": clean_summary,
+                "Date": result.published.strftime('%Y-%m-%d'),
+                **filtered_analysis_dict
+            })
+
+        df = pd.DataFrame(data)
+
+        status.update(label="整合数据中...", expanded=True)
+        st.write("整合数据...")
+
+        time.sleep(1)
+
+        status.update(label="成功🎉", expanded=False)
+
     return df
