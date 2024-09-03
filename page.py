@@ -12,144 +12,180 @@ from learning_style_calculator import learning_style_calculator
 
 
 
+
+
     
 # title
+
 st.set_page_config(page_title="智能学术助手", page_icon="📕", layout="wide")
-st.markdown("# 📕智能学术助手")
 
 
 
-# left side-bar
-st.sidebar.markdown('## 🧑‍🎓个人资料')
+# left side-bar -- navigation
+# 调整 sidebar 宽度
+st.markdown(
+    f'''
+        <style>
+            .sidebar .sidebar-content {{
+                width: 375px;
+            }}
+        </style>
+    ''',
+    unsafe_allow_html=True
+)
+st.sidebar.markdown('## 🧭页面导航')
 
-form = st.sidebar.form('个人资料')
-major = form.text_input(
-        "你的专业是："
-    )
+if st.sidebar.button("STEP1: 个人资料🧑‍🎓"):
+    st.session_state.current_page = 'page_info'
+if st.sidebar.button("STEP2: 关键词建议🧑‍🎓"):
+    st.session_state.current_page = 'page_keyword'
+if st.sidebar.button("STEP3: 学术搜索🔍"):
+    st.session_state.current_page = 'page_search'
+if st.sidebar.button("STEP4: 选择文献✅"):
+    st.session_state.current_page = 'page_selected'
 
 
-#placing filters in the sidebar using unique values.
-role = form.radio(
-        "请问你目前是:",
-        key="role",
-        options=["本科生", "研究生", "研究人员"],
-    )
 
-language = form.radio(
-        "你期望输出的语言是",
-        key="language",
-        options=["中文", "英文"],
-    )
-form.markdown('----')
-form.markdown('### 学习风格')
+def page_info(): # 包含实用指南和个人信息收集
+    st.markdown("# 📕智能学术助手")
+    with st.expander("**💡使用指南**"):
+        style = """
+        <style>
+            .title {
+                font-size: 20px;
+                color: #2E86C1; 
+                font-weight: bold;
+            }
+            .subtitle {
+                font-size: 18px;
+                color: #16A085; 
+                font-weight: bold;
+            }
+            .step {
+                font-size: 16px;
+                color: #E74C3C; 
+                font-weight: bold;
+            }
+            .text {
+                font-size: 14px;
+                #color: #34495E; 
+            }
+            ul.text {
+            padding-left: 14px;
+            margin: 5px 5px;
+            }
+            ul.text li {
+                font-size: 14px;
+                color: #34495E; 
+                line-height: 1;
+            }
+        </style>
+        """
 
-questionaire = {}
-with open('learning_style_scale.json','r') as f:
-    ls_ques = json.load(f)
+        # 插入样式到 Streamlit
+        st.markdown(style, unsafe_allow_html=True)
 
-for key in ls_ques:
-    questionaire[key] = form.radio(
-        ls_ques[key]['question'],
-        ls_ques[key]['choices'],
-        index =None
-    )
-category = learning_style_calculator(questionaire)
+        # 显示不同层级的文本
+        st.markdown("<p class='title'>欢迎来到您的研究小助手！</p>", unsafe_allow_html=True)
+        st.markdown("<p class='text'>不管您是学术小白还是科研大佬，这里都能让您的研究过程更轻松！跟着这几个步骤，让我们开始吧！</p>", unsafe_allow_html=True)
 
-form.markdown('----')
-form.markdown('**🤖CHATGPT**')
-#placing filters in the sidebar using unique values.
-GPT_API_KEY = form.text_input(
-        "GPT api KEY:"
-    )
+        st.markdown("<p class='step'>Step 1: 先完善个人信息</p>", unsafe_allow_html=True)
+        st.markdown("<p class='text'>在左侧的个人资料模块填入这些信息：</p>", unsafe_allow_html=True)
+        st.markdown("<ul class='text'><li>专业：您的领域是什么？填上来！</li><li>年级：本科生、研究生还是博士生？搞定！</li><li>输出语言：想要哪种语言的内容？中文、英文，随您选！</li><li>学习风格：答几道小问题，帮我们更懂您！</li></ul>", unsafe_allow_html=True)
+        st.markdown("<p class='text'>填好后点“提交”，系统会根据您的信息定制搜索建议和总结内容哦～</p>", unsafe_allow_html=True)
 
-# model_type = form.radio(
-#         " 选择你的模型 👉",
-#         options=[ "gpt-3.5-turbo", "gpt-4", "gpt-4o"],
-#     )
-submitted = form.form_submit_button("提交")
-if submitted:
-    st.balloons()
-    if not major or not role or not language or not questionaire:
-        st.sidebar.error("请填写所有必填信息。")
-    else:
-        # 显示成功提示
-        st.sidebar.success("完成！快输入研究问题，开启学术阅读之旅🎈")
+        st.markdown("<p class='step'>Step 2: 关键词搜索建议</p>", unsafe_allow_html=True)
+        st.markdown("<p class='text'>在这里输入您的研究问题，系统会：</p>", unsafe_allow_html=True)
+        st.markdown("<ul class='text'><li>给关键词建议：别再苦思冥想，多个关键词帮您搞定。</li><li>关键词定义：不懂关键词？系统帮您解释！</li></ul><br/>", unsafe_allow_html=True)
 
+        st.markdown("<p class='step'>Step 3: 学术搜索板块</p>", unsafe_allow_html=True)
+        st.markdown("<p class='text'>根据系统推荐的关键词，搜文献就是分分钟的事：</p>", unsafe_allow_html=True)
+        st.markdown("<ul class='text'><li>输入关键词：搜索相关文献。</li><li>选择重点：亮点、理论、方法、分析、结论，想看啥就勾啥！</li><li>个性化总结：总结出您关心的内容，提取精华部分。</li><li>加入文献库：喜欢的文献直接收入囊中，以后再慢慢看！</li></ul><br/>", unsafe_allow_html=True)
+
+        st.markdown("<p class='step'>Step 4: 文献库管理</p>", unsafe_allow_html=True)
+        st.markdown("<p class='text'>已选文献板块里，随时可以：</p>", unsafe_allow_html=True)
+        st.markdown("<ul class='text'><li>再次总结：随时回看、再总结，掌握文献内容不遗漏。</li></ul><br/>", unsafe_allow_html=True)
+
+        st.markdown("<p class='subtitle'>使用小Tips</p>", unsafe_allow_html=True)
+        st.markdown("<ul class='text'><li>关键词灵活调整：多试试关键词组合，找到最合适的内容！</li><li>精挑细选：放入文献库的文献，好好比较总结内容，选最适合您的。</li><li>关注重点随意选：学习、写作、演讲，选不同重点部分更高效！</li></ul>", unsafe_allow_html=True)
+
+        st.markdown("<p class='text'>快来体验，看看它有多聪明吧！您的研究问题，就交给我们！</p>", unsafe_allow_html=True)
+
+    
+    st.markdown('## 🧑‍🎓个人资料')
+
+    form = st.form('个人资料')
+    major = form.text_input(
+            "你的专业是："
+        )
+
+
+    #placing filters in the sidebar using unique values.
+    role = form.radio(
+            "请问你目前是:",
+            key="role",
+            options=["本科生", "研究生", "研究人员"],
+        )
+
+    language = form.radio(
+            "你期望输出的语言是",
+            key="language",
+            options=["中文", "英文"],
+        )
+    form.markdown('----')
+    form.markdown('### 学习风格')
+
+    questionaire = {}
+    with open('learning_style_scale.json','r') as f:
+        ls_ques = json.load(f)
+
+    for key in ls_ques:
+        questionaire[key] = form.radio(
+            ls_ques[key]['question'],
+            ls_ques[key]['choices'],
+            index =None
+        )
+    category = learning_style_calculator(questionaire)
+
+    form.markdown('----')
+    form.markdown('**🤖CHATGPT**')
+    #placing filters in the sidebar using unique values.
+    GPT_API_KEY = form.text_input(
+            "GPT api KEY:"
+        )
+    submitted = form.form_submit_button("提交")
+    if submitted:
+        st.balloons()
+        if not major or not role or not language or not questionaire:
+            st.sidebar.error("请填写所有必填信息。")
+        else:
+            # 显示成功提示
+            st.session_state.major = major
+            st.session_state.role1 = role
+            st.session_state.language1 = language
+            st.session_state.category = category
+            st.session_state.GPT_API_KEY = GPT_API_KEY
+            st.success("完成！快输入研究问题，开启学术阅读之旅🎈")
+
+if 'current_page' not in st.session_state:
+    st.session_state.current_page = 'page_info'
 
 # main page
+def page_keyword():
+    major = st.session_state.major
+    role = st.session_state.role1
+    language = st.session_state.language1
+    category = st.session_state.category
+    GPT_API_KEY = st.session_state.GPT_API_KEY
+    st.markdown("# 📕智能学术助手")
+    if 'keyword_results' not in st.session_state:
+        st.session_state.keyword_results = None  # For storing keyword suggestions results
 
-with st.expander("**💡使用指南**"):
-    # 定义不同的样式
-    style = """
-    <style>
-        .title {
-            font-size: 20px;
-            color: #2E86C1; 
-            font-weight: bold;
-        }
-        .subtitle {
-            font-size: 18px;
-            color: #16A085; 
-            font-weight: bold;
-        }
-        .step {
-            font-size: 16px;
-            color: #E74C3C; 
-            font-weight: bold;
-        }
-        .text {
-            font-size: 14px;
-            #color: #34495E; 
-        }
-        ul.text {
-        padding-left: 14px;
-        margin: 5px 5px;
-        }
-        ul.text li {
-            font-size: 14px;
-            color: #34495E; 
-            line-height: 1;
-        }
-    </style>
-    """
+    if 'df_data' not in st.session_state or 'history_papers' not in st.session_state:
+        st.session_state.df_data = pd.DataFrame(columns = [ 'Title', 'Date','Abstract'])  # For storing search results in Tab 1
+        st.session_state.history_papers = pd.DataFrame(columns = ['Title', 'Date','Abstract'])
 
-    # 插入样式到 Streamlit
-    st.markdown(style, unsafe_allow_html=True)
-
-    # 显示不同层级的文本
-    st.markdown("<p class='title'>欢迎来到您的研究小助手！</p>", unsafe_allow_html=True)
-    st.markdown("<p class='text'>不管您是学术小白还是科研大佬，这里都能让您的研究过程更轻松！跟着这几个步骤，让我们开始吧！</p>", unsafe_allow_html=True)
-
-    st.markdown("<p class='step'>Step 1: 先完善个人信息</p>", unsafe_allow_html=True)
-    st.markdown("<p class='text'>在左侧的个人资料模块填入这些信息：</p>", unsafe_allow_html=True)
-    st.markdown("<ul class='text'><li>专业：您的领域是什么？填上来！</li><li>年级：本科生、研究生还是博士生？搞定！</li><li>输出语言：想要哪种语言的内容？中文、英文，随您选！</li><li>学习风格：答几道小问题，帮我们更懂您！</li></ul>", unsafe_allow_html=True)
-    st.markdown("<p class='text'>填好后点“提交”，系统会根据您的信息定制搜索建议和总结内容哦～</p>", unsafe_allow_html=True)
-
-    st.markdown("<p class='step'>Step 2: 关键词搜索建议</p>", unsafe_allow_html=True)
-    st.markdown("<p class='text'>在这里输入您的研究问题，系统会：</p>", unsafe_allow_html=True)
-    st.markdown("<ul class='text'><li>给关键词建议：别再苦思冥想，多个关键词帮您搞定。</li><li>关键词定义：不懂关键词？系统帮您解释！</li></ul><br/>", unsafe_allow_html=True)
-
-    st.markdown("<p class='step'>Step 3: 学术搜索板块</p>", unsafe_allow_html=True)
-    st.markdown("<p class='text'>根据系统推荐的关键词，搜文献就是分分钟的事：</p>", unsafe_allow_html=True)
-    st.markdown("<ul class='text'><li>输入关键词：搜索相关文献。</li><li>选择重点：亮点、理论、方法、分析、结论，想看啥就勾啥！</li><li>个性化总结：总结出您关心的内容，提取精华部分。</li><li>加入文献库：喜欢的文献直接收入囊中，以后再慢慢看！</li></ul><br/>", unsafe_allow_html=True)
-
-    st.markdown("<p class='step'>Step 4: 文献库管理</p>", unsafe_allow_html=True)
-    st.markdown("<p class='text'>已选文献板块里，随时可以：</p>", unsafe_allow_html=True)
-    st.markdown("<ul class='text'><li>再次总结：随时回看、再总结，掌握文献内容不遗漏。</li></ul><br/>", unsafe_allow_html=True)
-
-    st.markdown("<p class='subtitle'>使用小Tips</p>", unsafe_allow_html=True)
-    st.markdown("<ul class='text'><li>关键词灵活调整：多试试关键词组合，找到最合适的内容！</li><li>精挑细选：放入文献库的文献，好好比较总结内容，选最适合您的。</li><li>关注重点随意选：学习、写作、演讲，选不同重点部分更高效！</li></ul>", unsafe_allow_html=True)
-
-    st.markdown("<p class='text'>快来体验，看看它有多聪明吧！您的研究问题，就交给我们！</p>", unsafe_allow_html=True)
-
-if 'keyword_results' not in st.session_state:
-    st.session_state.keyword_results = None  # For storing keyword suggestions results
-
-if 'df_data' not in st.session_state or 'history_papers' not in st.session_state:
-    st.session_state.df_data = pd.DataFrame(columns = [ 'Title', 'Date','Abstract'])  # For storing search results in Tab 1
-    st.session_state.history_papers = pd.DataFrame(columns = ['Title', 'Date','Abstract'])
-
-with st.expander("**💡关键词搜索建议**"):
+    # with st.expander("**💡关键词搜索建议**"):
     col1, col2 = st.columns([9,1]) 
     with col1:
         research_question = st.text_input("你的研究问题：",placeholder="请输入你的研究问题", value="",label_visibility='collapsed')
@@ -170,30 +206,21 @@ with st.expander("**💡关键词搜索建议**"):
             annotated_text((kw['keyword'], ""))  # Display keyword in boxed format
             # Add explanation in smaller font on a new line using st.markdown
             st.markdown(f"<p style='font-size: 14px;'>{kw['explanation']}</p>", unsafe_allow_html=True)
-        
+    st.session_state.research_question = research_question
           
 
-tab1, tab2 = st.tabs(["🔍学术搜索", "👓选出文献"])
+# tab1, tab2 = st.tabs(["🔍学术搜索", "👓选出文献"])
 
 
-with tab1:
+def page_search():
+    major = st.session_state.major
+    role = st.session_state.role1
+    language = st.session_state.language1
+    category = st.session_state.category
+    GPT_API_KEY = st.session_state.GPT_API_KEY
+    research_question = st.session_state.research_question
+    st.markdown("# 📕智能学术助手")
     st.markdown('## ARXIV关键词搜索')
-    # col1, col2 = st.columns([9, 1])
-    # with col1:
-    #     keyword = st.text_input("请输入你的关键词:", placeholder="请输入你的关键词:", value="", label_visibility='collapsed')
-    # with col2:
-    #     kw_submit = st.button("🔍", key='kw')
-    
-    # col3, col4 = st.columns([9,1])
-    
-    
-    # with col3:
-    #     focus = st.multiselect(
-    #         "你当前看文献关注的重点是什么",
-    #         ["亮点","理论", "方法", "分析","结论"], placeholder="请选择")
-    #     # print(focus)
-    #     # columns_show += [x for x in focus if x not in columns_show]
-
     keyword = st.text_input("请输入你的关键词:", placeholder="请输入")
 
     # Multi-select for focus areas
@@ -204,34 +231,12 @@ with tab1:
     )
     kw_submit = st.button("提交进行搜索 🔍", key='kw')
 
-    # # 检查是否需要初始化或重置 df_data 和 selected_rows
-    # if 'df_data' not in st.session_state or 'selected_rows' not in st.session_state or 'history_papers' not in st.session_state:
-    #     st.session_state.df_data = pd.DataFrame()
-    #     st.session_state.selected_rows = pd.DataFrame()
-    #     st.session_state.history_papers = pd.DataFrame()
-
-    # 实现更新选中行的函数
     if keyword and kw_submit:
-        st.session_state.df_data = search_summarize(keyword,major,role,language,focus,language,GPT_API_KEY)
+        st.session_state.df_data = search_summarize(keyword,major,role,language,focus,category,GPT_API_KEY)
 
-    # if all([x in st.session_state.history_papers.columns for x in translate(focus)]): 
-    #     st.session_state.history_papers = pd.DataFrame(columns = st.session_state.history_papers.columns + [x for x in translate(focus) if x not in st.session_state.history_papers.columns])   
-    #     print(st.session_state.history_papers)
     builder = GridOptionsBuilder.from_dataframe(st.session_state.df_data)
     builder.configure_selection('multiple', use_checkbox=True)
 
-    # # 使用 AgGrid 显示数据表
-    # # 显示表格，并通过按钮触发选择读取
-    # grid_response = AgGrid(
-    #     st.session_state.df_data,
-    #     gridOptions=grid_options,
-    #     update_mode=GridUpdateMode.MODEL_CHANGED,
-    #     data_return_mode=DataReturnMode.FILTERED_AND_SORTED,
-    #     fit_columns_on_grid_load=True,
-    #     enable_enterprise_modules=True,
-    #     height=300,
-    #     key='dataGrid'
-    # )
 
     builder.configure_column(
     'Abstract',
@@ -300,15 +305,18 @@ with tab1:
         container_t1.write(summary_selected)
 
 
-with tab2:
+def page_selected():
+    major = st.session_state.major
+    role = st.session_state.role1
+    language = st.session_state.language1
+    category = st.session_state.category
+    GPT_API_KEY = st.session_state.GPT_API_KEY
+    research_question = st.session_state.research_question
     
     history_papers = AgGrid(
         st.session_state.history_papers,
         update_mode=GridUpdateMode.MODEL_CHANGED
     )
-
-
-
     summary = ''
     summarise_history = st.button("总结以上文献", key = 'summarise_history')
     if summarise_history:
@@ -318,4 +326,14 @@ with tab2:
     container.write(summary)
 
     
-    
+
+
+
+if st.session_state.current_page == 'page_info':
+    page_info()
+elif st.session_state.current_page == 'page_keyword':
+    page_keyword()
+elif st.session_state.current_page == 'page_search':
+    page_search()
+elif st.session_state.current_page == 'page_selected':
+    page_selected()
