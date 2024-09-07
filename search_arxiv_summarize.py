@@ -99,7 +99,7 @@ def search_summarize(keyword, major, role, language, focus, category, GPT_API_KE
         search = arxiv.Search(
             query=keyword,
             max_results=10,
-            sort_by=arxiv.SortCriterion.SubmittedDate
+            sort_by=arxiv.SortCriterion.Relevance 
         )
 
         results = client.results(search)
