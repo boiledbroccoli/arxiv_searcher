@@ -190,6 +190,7 @@ def page_search():
 
     if keyword and kw_submit:
         st.session_state.df_data = search_summarize(keyword,major,role,language,focus,category,GPT_API_KEY)
+        st.info("【使用小贴士】可以通过**选中后拖动**来改变列的顺序")
 
     builder = GridOptionsBuilder.from_dataframe(st.session_state.df_data)
     builder.configure_selection('multiple', use_checkbox=True)
