@@ -16,16 +16,7 @@ from learning_style_calculator import learning_style_calculator
 
 st.set_page_config(page_title="智能学术助手", page_icon="📕", layout="wide")
 
-if 'major' not in st.session_state:
-    st.session_state.major = ''
-if 'role1' not in st.session_state:
-    st.session_state.role1 = ''
-if 'language1' not in st.session_state:
-    st.session_state.language1 = ''
-if 'category' not in st.session_state:
-    st.session_state.category = ''
-if 'GPT_API_KEY' not in st.session_state:
-    st.session_state.GPT_KPI_KEY = ''
+
 
 
 # left side-bar -- navigation
@@ -54,6 +45,18 @@ if st.sidebar.button("STEP4: 选择文献✅"):
 
 
 def page_info(): # 包含实用指南和个人信息收集
+
+    if 'major' not in st.session_state:
+        st.session_state.major = ''
+    if 'role1' not in st.session_state:
+        st.session_state.role1 = '本科生'
+    if 'language1' not in st.session_state:
+        st.session_state.language1 = '中文'
+    if 'category' not in st.session_state:
+        st.session_state.category = ''
+    if 'GPT_API_KEY' not in st.session_state:
+        st.session_state.GPT_API_KEY = ''
+
     st.markdown("# 📕智能学术助手")
     with st.expander("**💡 使用指南**", expanded=True):
     
@@ -76,7 +79,7 @@ def page_info(): # 包含实用指南和个人信息收集
 
     form = st.form('个人资料')
     st.session_state.major = form.text_input(
-            "你的专业是："
+            "你的专业是：",value  = st.session_state.major
         )
 
 
@@ -85,12 +88,15 @@ def page_info(): # 包含实用指南和个人信息收集
             "请问你目前是:",
             key="role",
             options=["本科生", "研究生", "研究人员"],
+            index = ["本科生", "研究生", "研究人员"].index(st.session_state.role1)
+            
         )
 
     st.session_state.language1 = form.radio(
             "你期望输出的语言是",
             key="language",
             options=["中文", "英文"],
+            index = ["中文", "英文"].index(st.session_state.language1)
         )
     form.markdown('----')
     form.markdown('### 学习风格')
@@ -111,18 +117,22 @@ def page_info(): # 包含实用指南和个人信息收集
     form.markdown('**🤖CHATGPT**')
     #placing filters in the sidebar using unique values.
     st.session_state.GPT_API_KEY = form.text_input(
-            "GPT api KEY:"
+            "GPT api KEY:", value = st.session_state.GPT_API_KEY
         )
+
     submitted = form.form_submit_button("提交")
     
     if submitted:
-        if st.session_state.major == ""  or st.session_state.role1 == "" or \
-        st.session_state.language1 == "" or st.session_state.category == ""  or st.session_state.GPT_KPI_KEY =='': # 改
+        if st.session_state.major == ""  or \
+        st.session_state.language1 == "" or not questionaire or st.session_state.GPT_API_KEY =='': # 改
             st.sidebar.error("请填写所有必填信息。")
         else:
             # 显示成功提示
             st.success("完成！快输入研究问题，开启学术阅读之旅🎈")
             st.balloons()
+
+
+
 
 if 'current_page' not in st.session_state:
     st.session_state.current_page = 'page_info'
