@@ -51,16 +51,16 @@ def keyword_generator(research_question, language, GPT_API_KEY,model_type="gpt-4
     # 以下是丢给 chatGPT 生成 summary 的代码
         prompt_kw = prompt_kw_generation(research_question,language)
         print(prompt_kw)
-        status.update(label="关键词生成中...")
+        status2.update(label="关键词生成中...")
         st.write("关键词生成中...")
         client = openai.OpenAI()
         keywords = client.chat.completions.create(model=model_type,
                                                   messages=[
                                                       {"role": "user", "content": prompt_kw }]) # notice
-        status.update(label="整合数据中...", expanded=True)
+        status2.update(label="整合数据中...", expanded=True)
         st.write("整合数据...")
 
     time.sleep(1)
 
-    status.update(label="成功🎉", expanded=False)    
+    status2.update(label="成功🎉", expanded=False)    
     return keywords.choices[0].message.content
