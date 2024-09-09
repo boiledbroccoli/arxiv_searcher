@@ -140,13 +140,10 @@ def search_summarize(keyword, major, role, language, focus, category, GPT_API_KE
                 **filtered_analysis_dict
             })
 
-        df = pd.DataFrame(data)
-
         status.update(label="整合数据中...", expanded=True)
         st.write("整合数据...")
-
         time.sleep(1)
-
         status.update(label="成功🎉", expanded=False)
-
+    df = pd.DataFrame(data)
+    print(df)
     return df
