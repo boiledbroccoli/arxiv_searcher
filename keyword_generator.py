@@ -64,8 +64,8 @@ def keyword_generator(research_question, language, GPT_API_KEY,model_type="gpt-4
         keywords = client.chat.completions.create(model=model_type,
                                                   messages=[
                                                       {"role": "user", "content": prompt_kw }]) # notice
-    status.update(label="整合数据中...", expanded=True)
-    st.write("整合数据...")
+        status.update(label="整合数据中...", expanded=True)
+        st.write("整合数据...")
 
     time.sleep(1)
 
