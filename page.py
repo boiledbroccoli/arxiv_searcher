@@ -54,8 +54,8 @@ def page_info(): # 包含实用指南和个人信息收集
         st.session_state.language1 = '中文'
     if 'category' not in st.session_state:
         st.session_state.category = ''
-    if 'GPT_API_KEY' not in st.session_state:
-        st.session_state.GPT_API_KEY = ''
+    # if 'GPT_API_KEY' not in st.session_state:
+    #     st.session_state.GPT_API_KEY = st.secrets['api_key']
 
     st.markdown("# 📕智能学术助手")
     with st.expander("**💡 使用指南**", expanded=True):
@@ -114,21 +114,16 @@ def page_info(): # 包含实用指南和个人信息收集
     st.session_state.category = learning_style_calculator(questionaire)
 
     form.markdown('----')
-    form.markdown('**🤖CHATGPT**')
-    #placing filters in the sidebar using unique values.
-    st.session_state.GPT_API_KEY = form.text_input(
-            "GPT api KEY:", value = st.session_state.GPT_API_KEY
-        )
 
     submitted = form.form_submit_button("提交")
     
     if submitted:
         if st.session_state.major == ""  or \
-        st.session_state.language1 == "" or not questionaire or st.session_state.GPT_API_KEY =='': # 改
+        st.session_state.language1 == "" or not questionaire : # 改
             st.sidebar.error("请填写所有必填信息。")
         else:
             # 显示成功提示
-            st.success("完成！快输入研究问题，开启学术阅读之旅🎈")
+            st.sidebar.success("完成！请进入STEP2输入研究问题，开启学术阅读之旅🎈")
             st.balloons()
 
 
@@ -143,7 +138,7 @@ def page_keyword():
     role = st.session_state.role1
     language = st.session_state.language1
     category = st.session_state.category
-    GPT_API_KEY = st.session_state.GPT_API_KEY
+    GPT_API_KEY = st.secrets['api_key']
     st.markdown("# 📕智能学术助手")
     if 'keyword_results' not in st.session_state:
         st.session_state.keyword_results = None  # For storing keyword suggestions results
@@ -184,7 +179,7 @@ def page_search():
     role = st.session_state.role1
     language = st.session_state.language1
     category = st.session_state.category
-    GPT_API_KEY = st.session_state.GPT_API_KEY
+    GPT_API_KEY = st.secrets['api_key']
     research_question = st.session_state.research_question
     st.markdown("# 📕智能学术助手")
     st.markdown('## ARXIV关键词搜索')
@@ -278,7 +273,7 @@ def page_selected():
     role = st.session_state.role1
     language = st.session_state.language1
     category = st.session_state.category
-    GPT_API_KEY = st.session_state.GPT_API_KEY
+    GPT_API_KEY = st.secrets['api_key']
     research_question = st.session_state.research_question
     
     history_papers = AgGrid(
