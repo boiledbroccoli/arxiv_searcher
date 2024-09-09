@@ -198,6 +198,7 @@ def page_search():
         placeholder="请选择",
         default = st.session_state.focus
     )
+    focus = st.session_state.focus
     kw_submit = st.button("提交进行搜索 🔍", key='kw')
 
     if keyword and kw_submit:
@@ -282,6 +283,7 @@ def page_selected():
     category = st.session_state.category
     GPT_API_KEY = st.secrets['api_key']
     research_question = st.session_state.research_question
+    focus = st.session_state.focus
     
     history_papers = AgGrid(
         st.session_state.history_papers,
