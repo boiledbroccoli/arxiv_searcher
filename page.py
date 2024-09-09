@@ -70,6 +70,9 @@ def page_info(): # 包含实用指南和个人信息收集
         **Step 4:** 在输出的文献中可以 <span style="color:#1ABC9C;"><b>选中感兴趣的文献加入文献库</b></span>，并生成一个汇总总结。
     
         **Step 5:** 在 <span style="color:#8E44AD;"><b>选出文献模块</b></span> 中查看历史文献库，并可生成汇总总结。
+
+        🔼 所有结果运行完成之前请不要变换页面，这会让进行中的程序中断🔼
+        
         """
         
         st.markdown(steps, unsafe_allow_html=True)
