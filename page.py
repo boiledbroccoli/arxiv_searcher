@@ -184,15 +184,19 @@ def page_search():
     category = st.session_state.category
     GPT_API_KEY = st.secrets['api_key']
     research_question = st.session_state.research_question
+
+    if 'focus' not in st.session_state:
+        st.session_state.focus = []
     st.markdown("# 📕智能学术助手")
     st.markdown('## ARXIV关键词搜索')
     keyword = st.text_input("请输入你的关键词:", placeholder="请输入")
 
     # Multi-select for focus areas
-    focus = st.multiselect(
+    st.session_state.focus = st.multiselect(
         "你当前看文献关注的重点是什么",
         ["亮点", "理论", "方法", "分析", "结论"], 
-        placeholder="请选择"
+        placeholder="请选择",
+        default = st.session_state.focus
     )
     kw_submit = st.button("提交进行搜索 🔍", key='kw')
 
