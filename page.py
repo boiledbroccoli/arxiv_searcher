@@ -267,10 +267,10 @@ def page_search():
         else:
             st.write("没有选中的行。")
         
-        print(summary_selected)
+        # print(summary_selected)
 
     # 调试输出当前选中的行数据
-        st.write("当前选中的行数据:", selected_rows)
+        # st.write("当前选中的行数据:", selected_rows)
         container_t1 = st.container(border=True)
         container_t1.write("### 选中文献总结")
         container_t1.write(summary_selected)
