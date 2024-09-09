@@ -1,4 +1,5 @@
-import os,openai,json,pandas as pd
+import os,openai,json, time,pandas as pd
+import streamlit as st
 
 def prompt_kw_generation(research_question, language):
 
@@ -52,15 +53,21 @@ def prompt_kw_generation(research_question, language):
 def keyword_generator(research_question, language, GPT_API_KEY,model_type="gpt-4"):
     # 该函数会在 page 里被召唤
     os.environ["OPENAI_API_KEY"] =  GPT_API_KEY
-
+    with st.status("开始上传研究问题", expanded=True) as status:
+        st.write("问题上传中...")
     # 以下是丢给 chatGPT 生成 summary 的代码
-    prompt_kw = prompt_kw_generation(research_question,language)
-    print(prompt_kw)
-    
-    client = openai.OpenAI()
-    keywords = client.chat.completions.create(model=model_type,
-                                              messages=[
-                                                  {"role": "user", "content": prompt_kw }]) # notice
-    # keywords = {'AA':'explanation for Why A',
-    #             'BB':'explanation for Why B'} # notice: 显示用，可删除
+        prompt_kw = prompt_kw_generation(research_question,language)
+        print(prompt_kw)
+        status.update(label="关键词生成中...")
+        st.write("关键词生成中...")
+        client = openai.OpenAI()
+        keywords = client.chat.completions.create(model=model_type,
+                                                  messages=[
+                                                      {"role": "user", "content": prompt_kw }]) # notice
+    status.update(label="整合数据中...", expanded=True)
+    st.write("整合数据...")
+
+    time.sleep(1)
+
+    status.update(label="成功🎉", expanded=False)    
     return keywords.choices[0].message.content
