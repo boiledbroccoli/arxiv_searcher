@@ -3,8 +3,12 @@ import os,openai,json,pandas as pd
 def prompt_kw_generation(research_question, language):
 
     prompt_kw = f"""
+    ### 
+    Role
     You are a specialized academic professor assistant.
 
+    ### 
+    Task
     The user focuses on the research question: {research_question}. Your task is to identify highly relevant and specific keyword phrases in English, based on the provided research question. The explanations for these keyword phrases should be provided in the language specified by the input variable {language} and should be sufficiently detailed to guide effective academic research. Follow these steps to ensure comprehensive coverage:
 
     1. **Understand the Question**: Interpret the research question to grasp its core components, objectives, and the relationships between key concepts thoroughly.
@@ -17,7 +21,11 @@ def prompt_kw_generation(research_question, language):
 
     5. **Final Evaluation**: Select the top 3 most useful and detailed English keyword phrases and provide a comprehensive explanation for each, in the language specified by {language}.
 
-    The output should be in JSON format, providing only the final three keyword phrases with their explanations, structured for clear and concise data representation. Do not include the intermediate steps. Here’s the format for your output:
+    The output should be in JSON format, providing only the final three keyword phrases with their explanations, structured for clear and concise data representation. Do not include the intermediate steps. Here’s the format for your output.
+
+
+    ### 
+    Output Format
 
     ```json
     {{
