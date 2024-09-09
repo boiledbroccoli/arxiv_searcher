@@ -263,7 +263,7 @@ def page_search():
             st.write("选中的标题:")
             for _, selected_row in selected_rows.iterrows():
                 st.write(selected_row['Title'])
-                summary_selected = summarize_all(selected_rows,language,role,major,research_question,focus,GPT_API_KEY,category)
+            summary_selected = summarize_all(selected_rows,language,role,major,research_question,focus,GPT_API_KEY,category)
         else:
             st.write("没有选中的行。")
         
