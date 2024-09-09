@@ -284,6 +284,8 @@ def page_selected():
     GPT_API_KEY = st.secrets['api_key']
     research_question = st.session_state.research_question
     focus = st.session_state.focus
+    st.markdown("# 📕智能学术助手")
+    st.markdown('## 历史选择文献')
     
     history_papers = AgGrid(
         st.session_state.history_papers,
